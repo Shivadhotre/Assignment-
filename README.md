@@ -40,3 +40,23 @@ def get_jobs():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+def recommend_jobs(user):
+    jobs = Job.query.filter(Job.required_skills.contains(user.skills)).filter(Job.experience_level == user.experience_level).filter(Job.location.in_(user.preferences["locations"])).filter(Job.job_type == user.preferences["job_type"]).all()
+    return jobs
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    skills = db.Column(db.String(200), nullable=False)
+    experience_level = db.Column(db.String(100), nullable=False)
+    preferences = db.Column(db.String(200), nullable=False)
+
+class Job(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    job_title = db.Column(db.String(100), nullable=False)
+    company = db.Column(db.String(100), nullable=False)
+    required_skills = db.Column(db.String(200), nullable=False)
+    location = db.Column(db.String(100), nullable=False)
+    job_type = db.Column(db.String(100), nullable=False)
+    experience_level = db.Column(db.String(100), nullable=False)
